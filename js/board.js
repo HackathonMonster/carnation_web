@@ -96,13 +96,20 @@ var Board = function(token) {
     });
 
   applicationHubProxy.client.onCreateItem = function(item) {
+    console.log(item);
     addElement(item);
+    repaint();
+  };
+  applicationHubProxy.client.onDeleteItem = function (item) {
+    removeElement(item.id);
     repaint();
   };
   applicationHubProxy.client.onUpdateItem = function(item) {
+    console.log(item);
     addElement(item);
     repaint();
   };
+
   applicationHubProxy.client.onError = function(message) {
     console.log(item);
   };
