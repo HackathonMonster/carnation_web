@@ -3,8 +3,8 @@ var Board = function(token) {
     elements = {};
 
   var init = function() {
-    var width = 1040,
-      height = 860;
+    var width = 1240,
+      height = 840;
 
     svg = d3.select('#board')
       .append('svg')
@@ -15,23 +15,25 @@ var Board = function(token) {
   var addElement = function(item) {
     var id = item.id,
       element = {};
+      console.log(item.x);
+
     if (item.type === 2) {
       element = {
         'type': 'text',
-        'x': item.x / 2.3,
-        'y': item.y  / 3.6,
-        'width': item.width,
-        'height': item.height,
+        'x': ~~(item.x),
+        'y': ~~(item.y  / 3.6),
+        'width': ~~item.width,
+        'height': ~~item.height,
         'size': item.styles.size + 'px',
         'text': item.styles.text
       };
     } else {
       element = {
         'type': 'image',
-        'x': item.x / 2.3,
-        'y': item.y / 3.6,
-        'width': item.width / 2,
-        'height': item.height / 2,
+        'x': ~~(item.x),
+        'y': ~~(item.y / 3.6),
+        'width': ~~(item.width / 2),
+        'height': ~~(item.height / 2),
         'url': item.imageUrl
       };
     }
@@ -86,6 +88,7 @@ var Board = function(token) {
       applicationHubProxy.server.readItems(id)
         .done(function(items) {
           items.forEach(function(item) {
+            console.log(item);
             addElement(item);
           });
           repaint();
@@ -97,16 +100,17 @@ var Board = function(token) {
 
   applicationHubProxy.client.onCreateItem = function(item) {
     console.log(item);
-    addElement(item);
+    addElement($.parseJSON(item));
     repaint();
   };
   applicationHubProxy.client.onDeleteItem = function (item) {
-    removeElement(item.id);
+    var id = $.parseJSON(item).id;
+    removeElement(id);
     repaint();
   };
   applicationHubProxy.client.onUpdateItem = function(item) {
     console.log(item);
-    addElement(item);
+    addElement($.parseJSON(item));
     repaint();
   };
 
