@@ -3,11 +3,10 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="keywords" content="">
   <meta name="description" content="">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="">
-  <meta property="og:url" content="">
+  <meta property="og:url" content="http://HackathonMonster.github.com/carnation_web">
   <meta property="og:title" content="">
   <meta property="og:image" content="">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
@@ -52,14 +51,14 @@
       font-weight: 400;
     }
   </style>
-  <title>Carnation</title>
+  <title>ホームボード</title>
 </head>
 
 <body>
   <div class="jumbotron" id="header">
     <a href="/board" class="btn btn-info btn-raised" id="login">Login</a>
-    <h1 class="text-center" id="title">House Board</h1>
-    <p class="text-center" id="sub-title">House Boardは家族のコミュニケーションツール"ホワイトボード"に成り代わる</p>
+    <h1 class="text-center" id="title">ホームボード</h1>
+    <p class="text-center" id="sub-title">家族専用のクローズドなホワイトボードアプリ</p>
   </div>
 
   <div class="container-fluid">
@@ -122,8 +121,13 @@
       if ((host == window.location.host) && (window.location.protocol != 'https:'))
         window.location.protocol = 'https';
 
-      var login = new Login();
+      var login = new Login(),
+        flg = false;
       $('#login_submit').click(function() {
+        if (flg)
+          return false;
+        flg = true;
+
         var name = $('#inputName').val();
         var email = $('#inputEmail').val();
         var password = $('#inputPassword').val();
@@ -131,6 +135,7 @@
         var birthday = $('#inputBirthday').val();
         if (!name || !email || password !== confirmPassword || !birthday) {
           $('#signup_dialog').effect('shake');
+          flg = false;
           return false;
         }
         login.register(name, email, password, confirmPassword, birthday)
@@ -144,11 +149,12 @@
             }, 5000);
           })
           .fail(function(data) {
-            consolo.log(data);
+            var log = $.parseJSON(data.responseText);
             $.snackbar({
-              content: data,
+              content: log.Message,
               timeout: 5000
             });
+            flg = false;
             $('#signup_dialog').effect('shake');
           });
       });
