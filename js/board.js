@@ -15,7 +15,6 @@ var Board = function(token) {
   var addElement = function(item) {
     var id = item.id,
       element = {};
-      console.log(item.x);
 
     if (item.type === 2) {
       element = {
@@ -88,7 +87,6 @@ var Board = function(token) {
       applicationHubProxy.server.readItems(id)
         .done(function(items) {
           items.forEach(function(item) {
-            console.log(item);
             addElement(item);
           });
           repaint();

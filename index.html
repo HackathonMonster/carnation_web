@@ -133,6 +133,7 @@
         var password = $('#inputPassword').val();
         var confirmPassword = $('#inputConfirmPassword').val();
         var birthday = $('#inputBirthday').val();
+        console.log(name+';'+ email+';'+password+';'+confirmPassword+';'+birthday);
         if (!name || !email || password !== confirmPassword || !birthday) {
           $('#signup_dialog').effect('shake');
           flg = false;
