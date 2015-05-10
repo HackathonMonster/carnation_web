@@ -4,7 +4,7 @@ var Board = function(token) {
 
   var init = function() {
     var width = 1040,
-      height = 1700;
+      height = 860;
 
     svg = d3.select('#board')
       .append('svg')
@@ -18,8 +18,8 @@ var Board = function(token) {
     if (item.type === 2) {
       element = {
         'type': 'text',
-        'x': item.x,
-        'y': item.y,
+        'x': item.x / 2.3,
+        'y': item.y  / 3.6,
         'width': item.width,
         'height': item.height,
         'size': item.styles.size + 'px',
@@ -28,10 +28,10 @@ var Board = function(token) {
     } else {
       element = {
         'type': 'image',
-        'x': item.x,
-        'y': item.y,
-        'width': item.width,
-        'height': item.height,
+        'x': item.x / 2.3,
+        'y': item.y / 3.6,
+        'width': item.width / 2,
+        'height': item.height / 2,
         'url': item.imageUrl
       };
     }
