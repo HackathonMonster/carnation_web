@@ -118,6 +118,10 @@
   <script src="/js/login.js"></script>
   <script>
     $(function() {
+      var host = 'HackathonMonster.github.com';
+      if ((host == window.location.host) && (window.location.protocol != 'https:'))
+        window.location.protocol = 'https';
+
       var login = new Login();
       $('#login_submit').click(function() {
         var name = $('#inputName').val();
