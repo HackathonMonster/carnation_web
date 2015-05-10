@@ -125,7 +125,12 @@
         var password = $('#inputPassword').val();
         var confirmPassword = $('#inputConfirmPassword').val();
         var birthday = $('#inputBirthday').val();
-        login.register(name, email, password, confirmPassword, birthday)..done(function(data) {
+        if (!name || !email || password !== confirmPassword || !birthday) {
+          $('#signup_dialog').effect('shake');
+          return false;
+        }
+        login.register(name, email, password, confirmPassword, birthday)
+          .done(function(data) {
             $.snackbar({
               content: "Register success!",
               timeout: 5000

@@ -28,8 +28,6 @@ var Login = function() {
   };
 
   util.login = function(username, password) {
-    if (!username || !password)
-      return false;
     var data = {
       'grant_type': 'password',
       'username': username,
@@ -44,10 +42,6 @@ var Login = function() {
   };
 
   util.register = function(name, email, password, confirmPassword, birthday) {
-    if (!name || !email || password !== confirmPassword || !birthday) {
-      $('#signup_dialog').effect('shake');
-      return false;
-    }
     var data = {
       'name': name,
       'email': email,
