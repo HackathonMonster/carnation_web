@@ -4,7 +4,7 @@ var Board = function(token) {
 
   var init = function() {
     var width = 1040,
-      height = 700;
+      height = 1700;
 
     svg = d3.select('#board')
       .append('svg')
@@ -15,23 +15,24 @@ var Board = function(token) {
   var addElement = function(item) {
     var id = item.id,
       element = {};
-    if (item/*image*/) {
-      element = {
-        'type': 'image',
-        'x': item.x,
-        'y': item.y,
-        'width': item.width,
-        'height': item.height,
-        'xlink:href': item.imageUrl
-      };
-    } else {
+    if (item.type === 2) {
       element = {
         'type': 'text',
         'x': item.x,
         'y': item.y,
         'width': item.width,
         'height': item.height,
-        'text': item.text
+        'size': item.styles.size + 'px',
+        'text': item.styles.text
+      };
+    } else {
+      element = {
+        'type': 'image',
+        'x': item.x,
+        'y': item.y,
+        'width': item.width,
+        'height': item.height,
+        'url': item.imageUrl
       };
     }
     elements[id] = element;
@@ -42,25 +43,29 @@ var Board = function(token) {
   };
 
   var repaint = function() {
-    d3.select('#board')
+    d3.select('#board svg')
       .remove();
     init();
 
     for (var id in elements) {
       if (elements.hasOwnProperty(id)) {
         var item = elements[id];
-        if (item.type === 'image') {
+
+        if (item.type === 'text') {
+          svg.append('text')
+            .text(item.text)
+            .attr('x', item.x)
+            .attr('y', item.y)
+            .attr('width', item.width)
+            .attr('height', item.height)
+            .attr('font-size', item.size);
+        } else if (item.type === 'image') {
           svg.append('svg:image')
             .attr('x', item.x)
             .attr('y', item.y)
             .attr('width', item.width)
             .attr('height', item.height)
             .attr('xlink:href', item.url);
-        } else if (item.type === 'text') {
-          svg.append('text')
-            .text(item.text)
-            .attr('x', item.x)
-            .attr('y', item.y);
         }
       }
     }
@@ -79,23 +84,24 @@ var Board = function(token) {
       var id = '2f4723eb-c11f-4f91-82a1-9e7e709026b7';
       applicationHubProxy.server.openBoard(id);
       applicationHubProxy.server.readItems(id)
-        .done(function(data) {
-          console.log(data);
-          data.forEach(function(item) {
-            console.log(item);
+        .done(function(items) {
+          items.forEach(function(item) {
             addElement(item);
           });
+          repaint();
         });
     })
     .fail(function() {
       console.log('Could not Connect!');
     });
 
-  applicationHubProxy.client.onCreateSuccess = function(item) {
-    console.log(item);
+  applicationHubProxy.client.onCreateItem = function(item) {
+    addElement(item);
+    repaint();
   };
-  applicationHubProxy.client.onUpdateSuccess = function(message) {
-    console.log(item);
+  applicationHubProxy.client.onUpdateItem = function(item) {
+    addElement(item);
+    repaint();
   };
   applicationHubProxy.client.onError = function(message) {
     console.log(item);
