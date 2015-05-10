@@ -13,8 +13,8 @@
   <meta property="og:image" content="">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
-  <link rel="shortcut icon" href="/favicon.ico">
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="shortcut icon" href="./favicon.ico">
+  <link rel="apple-touch-icon" href="./apple-touch-icon.png">
   <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
   <link href="/css/roboto.min.css" rel="stylesheet">
@@ -52,7 +52,7 @@
       border-radius: 4px;
       width: 1040px;
       height: 700px;
-      margin-top: 40px;
+      margin-top: 50px;
     }
   </style>
   <title>House Board</title>
@@ -119,7 +119,8 @@
     $(function() {
       $.material.init();
 
-      var login = new Login();
+      var login = new Login(),
+        flg = false;
       if (!login.isLogin()) {
         $('#login_dialog').modal({
           backdrop: 'static',
@@ -128,10 +129,14 @@
         });
 
         $('#login_submit').click(function() {
+          if (flg)
+            return false;
+          flg = true;
           var name = $('#inputName').val();
           var password = $('#inputPassword').val();
           if (!name || !password) {
             $('#login_dialog').effect('shake');
+            flg = false;
             return false;
           }
 
@@ -143,6 +148,7 @@
               var board = new Board(window.sessionStorage.getItem('token'));
             })
             .fail(function() {
+              flg = false;
               $('#login_dialog').effect('shake');
             });
         });
