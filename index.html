@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="keywords" content="">
+  <meta name="description" content="">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="">
+  <meta property="og:url" content="">
+  <meta property="og:title" content="">
+  <meta property="og:image" content="">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+  <link href="/css/roboto.min.css" rel="stylesheet">
+  <link href="/css/material.min.css" rel="stylesheet">
+  <link href="/css/ripples.min.css" rel="stylesheet">
+  <link href="/css/snackbar.min.css" rel="stylesheet">
+  <style>
+    #header {
+      background-image: url("/img/header.jpg");
+      background-size: cover;
+      padding: 170px 0;
+      min-height: 560px;
+    }
+
+    #title {
+      color: #eee;
+      font-weight: 900;
+      text-shadow: 1px 2px 10px rgba(0, 0, 0, 0.7);
+    }
+
+    #sub-title {
+      color: #eee;
+      text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.7);
+    }
+
+    #login {
+      position: absolute;
+      right: 5%;
+      top: 30px;
+    }
+
+    #dialog h2 {
+      padding: 14px;
+      margin: 0;
+      font-size: 16px;
+      font-weight: 400;
+    }
+  </style>
+  <title>Carnation</title>
+</head>
+
+<body>
+  <div class="jumbotron" id="header">
+    <a href="/board" class="btn btn-info btn-raised" id="login">Login</a>
+    <h1 class="text-center" id="title">House Board</h1>
+    <p class="text-center" id="sub-title">House Boardは家族のコミュニケーションツール"ホワイトボード"に成り代わる</p>
+  </div>
+
+  <div class="container-fluid">
+    <div class="col-xs-8 col-xs-offset-2" id="signup_dialog">
+      <div class="well bs-component">
+        <form class="form-horizontal">
+          <fieldset>
+            <legend>サインアップ</legend>
+            <div class="form-group">
+              <label for="inputName" class="col-lg-2 control-label">Name</label>
+              <div class="col-lg-10">
+                <input class="form-control" id="inputName" placeholder="name" type="text">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputEmail" class="col-lg-2 control-label">Email</label>
+              <div class="col-lg-10">
+                <input class="form-control" id="inputEmail" placeholder="Email" type="email">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputPassword" class="col-lg-2 control-label">Password</label>
+              <div class="col-lg-10">
+                <input class="form-control" id="inputPassword" placeholder="Password" type="password">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputConfirmPassword" class="col-lg-2 control-label">Confirm Password</label>
+              <div class="col-lg-10">
+                <input class="form-control" id="inputConfirmPassword" placeholder="Confirm Password" type="password">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputBirthday" class="col-lg-2 control-label">Birthday</label>
+              <div class="col-lg-10">
+                <input class="form-control" id="inputBirthday" placeholder="Birthday" type="date">
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="col-xs-10 col-lg-offset-5">
+                <button id="login_submit" type="button" class="btn btn-primary">Register</button>
+              </div>
+            </div>
+          </fieldset>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+  <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+  <script src="/js/material.min.js"></script>
+  <script src="/js/ripples.min.js"></script>
+  <script src="/js/snackbar.min.js"></script>
+  <script src="/js/login.js"></script>
+  <script>
+    $(function() {
+      var login = new Login();
+      $('#login_submit').click(function() {
+        var name = $('#inputName').val();
+        var email = $('#inputEmail').val();
+        var password = $('#inputPassword').val();
+        var confirmPassword = $('#inputConfirmPassword').val();
+        var birthday = $('#inputBirthday').val();
+        login.register(name, email, password, confirmPassword, birthday)..done(function(data) {
+            $.snackbar({
+              content: "Register success!",
+              timeout: 5000
+            });
+            setTimeout(function() {
+              location.href = '/board';
+            }, 5000);
+          })
+          .fail(function(data) {
+            consolo.log(data);
+            $.snackbar({
+              content: data,
+              timeout: 5000
+            });
+            $('#signup_dialog').effect('shake');
+          });
+      });
+    })
+  </script>
+</body>
+
+</html>
