@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <base href="http://localhost/">
+  <meta charset="UTF-8">
+  <meta name="keywords" content="">
+  <meta name="description" content="">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="">
+  <meta property="og:url" content="">
+  <meta property="og:title" content="">
+  <meta property="og:image" content="">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+  <link href="/css/roboto.min.css" rel="stylesheet">
+  <link href="/css/material-fullpalette.min.css" rel="stylesheet">
+  <link href="/css/ripples.min.css" rel="stylesheet">
+  <link href="//fezvrasta.github.io/snackbarjs/dist/snackbar.min.css" rel="stylesheet">
+  <style>
+    .header-panel {
+      background-color: #f2a136;
+      height: 70px;
+      position: relative;
+      z-index: 3;
+    }
+
+    .header-panel h1 {
+      color: #fff;
+      font-size: 20px;
+      font-weight: 400;
+    }
+
+    #login_dialog {
+      margin-top: 10%;
+    }
+
+    #dialog h2 {
+      padding: 14px;
+      margin: 0;
+      font-size: 16px;
+      font-weight: 400;
+    }
+
+    #board {
+      background-color: #fff;
+      border: 1px solid #e3e3e3;
+      border-radius: 4px;
+      width: 1040px;
+      height: 700px;
+      margin-top: 40px;
+    }
+  </style>
+  <title>House Board</title>
+</head>
+
+<body>
+  <div class="header-panel shadow-z-2">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-xs-3">
+          <h1>House Board</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container-fluid main">
+    <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="login_dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+          </div>
+          <div class="modal-body">
+            <form class="form-horizontal">
+              <fieldset>
+                <legend>ログイン</legend>
+                <div class="form-group">
+                  <label for="inputName" class="col-lg-2 control-label">Name</label>
+                  <div class="col-lg-10">
+                    <input class="form-control" id="inputName" placeholder="Name" type="text">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="inputPassword" class="col-lg-2 control-label">Password</label>
+                  <div class="col-lg-10">
+                    <input class="form-control" id="inputPassword" placeholder="Password" type="password">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="col-lg-10 col-lg-offset-5">
+                    <button id="login_submit" type="button" class="btn btn-primary">Login</button>
+                  </div>
+                </div>
+              </fieldset>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="board" class="sample shadow-z-1 center-block" style="display: none;"></div>
+  </div>
+
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+  <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+  <script src="//d3js.org/d3.v3.min.js"></script>
+  <script src="/js/jquery.signalR.min.js"></script>
+  <script src="/js/hubs.js"></script>
+  <script src="/js/ripples.min.js"></script>
+  <script src="/js/material.min.js"></script>
+  <script src="/js/login.js"></script>
+  <script src="/js/board.js"></script>
+  <script>
+    $(function() {
+      $.material.init();
+
+      var login = new Login();
+      if (!login.isLogin()) {
+        $('#login_dialog').modal({
+          backdrop: 'static',
+          keyboard: false,
+          show: true
+        });
+
+        $('#login_submit').click(function() {
+          var name = $('#inputName').val();
+          var password = $('#inputPassword').val();
+          if (!name || !password) {
+            $('#login_dialog').effect('shake');
+            return false;
+          }
+
+          login.login(name, password)
+            .done(function(data) {
+              login.saveItemToStorage('token', data.access_token);
+              $('#login_dialog').modal('hide');
+              $('#board').show();
+              var board = new Board(window.sessionStorage.getItem('token'));
+            })
+            .fail(function() {
+              $('#login_dialog').effect('shake');
+            });
+        });
+      } else {
+        $('#board').show();
+        var board = new Board(window.sessionStorage.getItem('token'));
+      }
+    });
+  </script>
+</body>
+
+</html>
